@@ -28,52 +28,57 @@
         if (event.key === 'ArrowLeft') {
             left();
         }
-        if(event.key==='ArrowRight')
-        {
+        if (event.key === 'ArrowRight') {
             right();
         }
-        if(event.key==='ArrowDown')
-        {
+        if (event.key === 'ArrowDown') {
             down();
         }
-        if(event.key==='ArrowUp')
-        {
+        if (event.key === 'ArrowUp') {
             up();
         }
     });
     const canvas = document.getElementById('game');
     const ctx = canvas.getContext("2d");
-    
 
-    function up()
-    {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    function up() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "purple";
-        y--;
+        y = y - 10;
+        if (y == -60) {
+            y = 490;
+        }
         ctx.fillRect(x, y, 50, 50);
     }
 
-    function down()
-    {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
+    function down() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "purple";
-        y++;
+        y = y + 10;
+        if (y == 500) {
+            y = 0;
+        }
         ctx.fillRect(x, y, 50, 50);
     }
 
-    function left()
-    {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
+    function left() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "purple";
-        x--;
+        x = x - 10;
+        if (x == -60) {
+            x = 340;
+        }
         ctx.fillRect(x, y, 50, 50);
     }
 
-    function right()
-    {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
+    function right() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "purple";
-        x++;
+        x = x + 10;
+        if (x == 360) {
+            x = -40;
+        }
         ctx.fillRect(x, y, 50, 50);
     }
 </script>
