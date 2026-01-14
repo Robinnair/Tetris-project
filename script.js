@@ -5,7 +5,6 @@ const ctx=canvas.getContext("2d");
 let dropCounter=0;
 let dropInterval=300;
 let lastTime=0;
-
 function update(time=0){
     const deltatime=time-lastTime;
     dropCounter=dropCounter+deltatime;
@@ -36,6 +35,7 @@ function createPiece()
         matrix: [[1,1],[1,1]],
         x: 4,
         y: 0,
+        color: getNextColor()
     };
 }
 
@@ -46,16 +46,28 @@ function drawMatrix(matrix,offset)
     matrix.forEach((row,y)=>{
         row.forEach((value,x)=>{
             if(value!=0){
-                ctx.fillStyle="cyan";
+                ctx.fillStyle=offset.color;
                 ctx.fillRect(x+offset.x,y+offset.y,1,1);
             }
         });
     });
 }
 
+function drawBoard() {
+    board.forEach((row, y) => {
+        row.forEach((value, x) => {
+            if (value !== 0) {
+                ctx.fillStyle = value; 
+                ctx.fillRect(x, y, 1, 1);
+            }
+        });
+    });
+}
+
+
 function draw(){
     ctx.clearRect(0,0,COLS,ROWS);
-    drawMatrix(board,{x:0,y:0});
+    drawBoard();
     drawMatrix(player.matrix,player);
 }
 
@@ -64,8 +76,7 @@ function playerDrop(){
     if(collide(board,player)){
         player.y--;
         merge(board,player);
-        player.y=0;
-        player.x=4;
+        Object.assign(player,createPiece());
     }
 }
 
@@ -91,7 +102,7 @@ function merge(board,player){
     player.matrix.forEach((row,y)=>{
         row.forEach((value,x)=>{
             if(value!=0){
-                board[y+player.y][x+player.x]=value;
+                board[y+player.y][x+player.x]=player.color;
             }
         });
     });
