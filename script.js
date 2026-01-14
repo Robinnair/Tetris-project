@@ -6,6 +6,53 @@ let dropCounter=0;
 let dropInterval=300;
 let lastTime=0;
 
+const SHAPES = {
+    I: [
+        [0,0,0,0],
+        [1,1,1,1],
+        [0,0,0,0],
+        [0,0,0,0]
+    ],
+    O: [
+        [1,1],
+        [1,1]
+    ],
+    T: [
+        [0,1,0],
+        [1,1,1],
+        [0,0,0]
+    ],
+    S: [
+        [0,1,1],
+        [1,1,0],
+        [0,0,0]
+    ],
+    Z: [
+        [1,1,0],
+        [0,1,1],
+        [0,0,0]
+    ],
+    J: [
+        [1,0,0],
+        [1,1,1],
+        [0,0,0]
+    ],
+    L: [
+        [0,0,1],
+        [1,1,1],
+        [0,0,0]
+    ]
+};
+
+const ROWS=20;
+const COLS=10;
+
+function randomShape(){
+    const keys=Object.keys(SHAPES);
+    const randkey=keys[Math.floor((Math.random()*keys.length))];
+    return SHAPES[randkey];
+}
+
 document.addEventListener("keydown",event=>{
     if(event.key==='ArrowLeft'){
         playerMove(-1);
@@ -21,9 +68,10 @@ document.addEventListener("keydown",event=>{
 
 function createPiece()
 {
+    const matrix=randomShape();
     return {
-        matrix: [[1,1],[1,1]],
-        x: 4,
+        matrix,
+        x: Math.floor((COLS)/2)-Math.floor(matrix[0].length/2),
         y: 0,
         color: getNextColor()
     };
@@ -51,9 +99,6 @@ function update(time=0){
 }
 
 ctx.scale(20,20);
-
-const ROWS=20;
-const COLS=10;
 
 function createBoard()
 {
