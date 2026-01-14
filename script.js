@@ -29,7 +29,6 @@ function createBoard()
 }
 
 const board=createBoard();
-board[19][5]=1;
 
 function createPiece()
 {
@@ -62,7 +61,40 @@ function draw(){
 
 function playerDrop(){
     player.y++;
-    draw();
+    if(collide(board,player)){
+        player.y--;
+        merge(board,player);
+        player.y=0;
+        player.x=4;
+    }
+}
+
+function collide(board,player){
+    const matrix=player.matrix;
+    const offsetx=player.x;
+    const offsety=player.y;
+    for(let y=0;y<matrix.length;y++){
+        for(let x=0;x<matrix[y].length;x++){
+            if(matrix[y][x]!==0){
+                const boardRow=board[y+offsety];
+                const boardCell=boardRow&&boardRow[x+offsetx];
+                if(boardCell!==0){
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+function merge(board,player){
+    player.matrix.forEach((row,y)=>{
+        row.forEach((value,x)=>{
+            if(value!=0){
+                board[y+player.y][x+player.x]=value;
+            }
+        });
+    });
 }
 
 update();
