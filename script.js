@@ -5,6 +5,39 @@ const ctx=canvas.getContext("2d");
 let dropCounter=0;
 let dropInterval=300;
 let lastTime=0;
+
+document.addEventListener("keydown",event=>{
+    if(event.key==='ArrowLeft'){
+        playerMove(-1);
+    }
+    if(event.key==='ArrowRight'){
+        playerMove(1);
+    }
+    if(event.key==='ArrowDown'){
+        dropCounter=0;
+        playerDrop();
+    }
+})
+
+function createPiece()
+{
+    return {
+        matrix: [[1,1],[1,1]],
+        x: 4,
+        y: 0,
+        color: getNextColor()
+    };
+}
+
+const player=createPiece();
+
+function playerMove(dir){
+    player.x=player.x+dir;
+    if(collide(board,player)){
+        player.x-=dir;
+    }
+}
+
 function update(time=0){
     const deltatime=time-lastTime;
     dropCounter=dropCounter+deltatime;
@@ -28,18 +61,6 @@ function createBoard()
 }
 
 const board=createBoard();
-
-function createPiece()
-{
-    return {
-        matrix: [[1,1],[1,1]],
-        x: 4,
-        y: 0,
-        color: getNextColor()
-    };
-}
-
-const player=createPiece();
 
 function drawMatrix(matrix,offset)
 {
