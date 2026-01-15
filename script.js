@@ -151,6 +151,7 @@ function update(time = 0) {
             bgmusic.loop = true;
             bgmusic.play();
             gameovermusic = true;
+            document.querySelector(".bottom-text").innerHTML="You lose, will you try again? reload to retry";
         }
         return;
     }
