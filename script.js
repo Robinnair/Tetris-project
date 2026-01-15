@@ -64,7 +64,31 @@ document.addEventListener("keydown",event=>{
         dropCounter=0;
         playerDrop();
     }
+    if(event.key==='x'||event.key==='X'){
+        rotateRight();
+    }
+    if(event.key==='z'||event.key==='Z'){
+        rotateLeft();
+    }
 })
+
+function rotateRight(){
+    for(let y=0;y<player.matrix.length;y++){
+        for(let x=0;x<y;x++){
+            [player.matrix[x][y],player.matrix[y][x]]=[player.matrix[y][x],player.matrix[x][y]];
+        }
+    }
+    player.matrix.forEach(row=> row.reverse());
+}
+
+function rotateLeft(){
+    for(let y=0;y<player.matrix.length;y++){
+        for(let x=0;x<y;x++){
+            [player.matrix[x][y],player.matrix[y][x]]=[player.matrix[y][x],player.matrix[x][y]];
+        }
+    }
+    player.matrix.reverse();
+}
 
 function createPiece()
 {
