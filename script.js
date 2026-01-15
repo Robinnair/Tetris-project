@@ -6,6 +6,9 @@ let dropCounter=0;
 let dropInterval=300;
 let lastTime=0;
 
+const bgmusic=new Audio("sounds/1.28 Toby Fox - DELTARUNE Chapter 2 OST - 28 Acid Tunnel of Love.flac")
+bgmusic.play();
+bgmusic.loop=true;
 const SHAPES = {
     I: [
         [0,0,0,0],
@@ -73,21 +76,31 @@ document.addEventListener("keydown",event=>{
 })
 
 function rotateRight(){
+    let prev=JSON.parse(JSON.stringify(player.matrix));
     for(let y=0;y<player.matrix.length;y++){
         for(let x=0;x<y;x++){
             [player.matrix[x][y],player.matrix[y][x]]=[player.matrix[y][x],player.matrix[x][y]];
         }
     }
     player.matrix.forEach(row=> row.reverse());
+    if(collide(board,player)){
+        player.matrix=prev;
+    }
 }
 
 function rotateLeft(){
+    let prev=JSON.parse(JSON.stringify(player.matrix));
+
     for(let y=0;y<player.matrix.length;y++){
         for(let x=0;x<y;x++){
             [player.matrix[x][y],player.matrix[y][x]]=[player.matrix[y][x],player.matrix[x][y]];
         }
     }
     player.matrix.reverse();
+
+    if(collide(board,player)){
+        player.matrix=prev;
+    }
 }
 
 function clearline(){
