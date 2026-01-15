@@ -90,6 +90,21 @@ function rotateLeft(){
     player.matrix.reverse();
 }
 
+function clearline(){
+    const sound_object=new Audio("sounds/achievement-video-game-type-1-230515.mp3");
+    let linecleared=0;
+    for(let y=board.length-1;y>=0;y--){
+        if(board[y].every(cell=>cell!==0)){
+            board.splice(y,1);
+            board.unshift(Array(COLS).fill(0));
+            linecleared++;
+            y++;
+            sound_object.play();
+        }
+    }
+    return linecleared;
+}
+
 function createPiece()
 {
     const matrix=randomShape();
@@ -166,6 +181,7 @@ function playerDrop(){
     if(collide(board,player)){
         player.y--;
         merge(board,player);
+        let rows_scored=clearline();
         Object.assign(player,createPiece());
     }
 }
