@@ -56,3 +56,23 @@ canvas{
     font-family: Jacquard-12;
     font-size: 30px;
 }
+
+.start-button{
+    background-color: purple;
+    color:white;
+    font-size: 50px;
+    font-family:Tourney;
+    border:none;
+}
+
+.start-button:hover{
+    color:purple;
+    border:solid;
+    background-color: black;
+}
+
+.start-button-box{
+    display: flex;
+    justify-content: center;
+    margin-top:50px;
+}

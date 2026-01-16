@@ -7,6 +7,7 @@ let dropInterval = 300;
 let lastTime = 0;
 let gameover = false;
 let score_num=0;
+let gamestart=false;
 let bgmusic = new Audio("sounds/1.28 Toby Fox - DELTARUNE Chapter 2 OST - 28 Acid Tunnel of Love.flac");
 bgmusic.loop = true;
 let musicstart = false;
@@ -145,7 +146,29 @@ function playerMove(dir) {
     }
 }
 
+const startBtn = document.querySelector(".start-button");
+
+
+startBtn.addEventListener("click", start);
+
+function start() {
+    if (gamestart) return;
+
+    gamestart = true;
+    gameover = false;
+    lastTime = 0;
+    dropCounter = 0;
+    startBtn.style.display = "none"; 
+    update();
+}
+
+
+
 function update(time = 0) {
+    if(!gamestart)
+    {
+        return;
+    }
     if (gameover) {
         if (!gameovermusic) {
             bgmusic.pause();
