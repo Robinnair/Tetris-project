@@ -48,7 +48,17 @@ canvas{
     }
 }
 
-#scoresection{
+.highest_scoresection{
+    border: 2px solid white;
+    position:fixed;
+    top:200px;
+    left:300px;
+    font-family: Jacquard-12;
+    font-size: 30px;
+    margin:10px;
+}
+
+.scoresection{
     border: 2px solid white;
     position:fixed;
     top:160px;

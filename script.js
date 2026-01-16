@@ -1,14 +1,17 @@
 import { getNextColor } from "./data/color.js";
-import {score} from "./data/score.js"
+import { score } from "./data/score.js"
 const canvas = document.getElementById('tetris');
 const ctx = canvas.getContext("2d");
 let dropCounter = 0;
 let dropInterval = 300;
 let lastTime = 0;
 let gameover = false;
-let score_num=0;
-let gamestart=false;
+let score_num = 0;
+let gamestart = false;
 let bgmusic = new Audio("sounds/1.28 Toby Fox - DELTARUNE Chapter 2 OST - 28 Acid Tunnel of Love.flac");
+
+let max=JSON.parse(localStorage.getItem('high_score'))||0;
+document.querySelector('.highest_scoresection').innerHTML=`High score: ${max}`;
 bgmusic.loop = true;
 let musicstart = false;
 let gameovermusic = false;
@@ -118,8 +121,6 @@ function clearline() {
             board.splice(y, 1);
             board.unshift(Array(COLS).fill(0));
             linecleared++;
-            updateScore(linecleared);
-            document.querySelector('#scoresection').innerHTML=`score: ${score_num}`;
             y++;
             sound_object.play();
         }
@@ -158,15 +159,14 @@ function start() {
     gameover = false;
     lastTime = 0;
     dropCounter = 0;
-    startBtn.style.display = "none"; 
+    startBtn.style.display = "none";
     update();
 }
 
 
 
 function update(time = 0) {
-    if(!gamestart)
-    {
+    if (!gamestart) {
         return;
     }
     if (gameover) {
@@ -176,7 +176,7 @@ function update(time = 0) {
             bgmusic.loop = true;
             bgmusic.play();
             gameovermusic = true;
-            document.querySelector(".bottom-text").innerHTML="You lose, will you try again? reload to retry";
+            document.querySelector(".bottom-text").innerHTML = "You lose, will you try again? reload to retry";
         }
         return;
     }
@@ -228,8 +228,16 @@ function draw() {
     drawMatrix(player.matrix, player);
 }
 
-function updateScore(index){
-    score_num=score_num+score[index];
+function updateScore(index) {
+
+    score_num = score_num + score[index-1];
+    console.log(`max: ${max}`);
+    if(max<score_num){
+        max=score_num;
+        localStorage.setItem('high_score',JSON.stringify(max));
+        console.log(`max: ${max}`);
+        document.querySelector('.highest_scoresection').innerHTML=`High score: ${max}`;
+    }
 }
 
 function playerDrop() {
@@ -238,6 +246,10 @@ function playerDrop() {
         player.y--;
         merge(board, player);
         let rows_scored = clearline();
+        if (rows_scored !== 0) {
+            updateScore(rows_scored);
+            document.querySelector('.scoresection').innerHTML = `score: ${score_num}`;
+        }
         Object.assign(player, createPiece());
         if (collide(board, player)) {
             gameover = true;
