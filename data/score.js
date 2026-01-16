@@ -1,0 +1,1 @@
+export const score=[100,200,300,800]

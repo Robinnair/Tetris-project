@@ -47,3 +47,12 @@ canvas{
         opacity: 0.85;
     }
 }
+
+#scoresection{
+    border: 2px solid white;
+    position:fixed;
+    top:160px;
+    left:350px;
+    font-family: Jacquard-12;
+    font-size: 30px;
+}

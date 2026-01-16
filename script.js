@@ -1,12 +1,12 @@
 import { getNextColor } from "./data/color.js";
-
+import {score} from "./data/score.js"
 const canvas = document.getElementById('tetris');
 const ctx = canvas.getContext("2d");
 let dropCounter = 0;
 let dropInterval = 300;
 let lastTime = 0;
 let gameover = false;
-
+let score_num=0;
 let bgmusic = new Audio("sounds/1.28 Toby Fox - DELTARUNE Chapter 2 OST - 28 Acid Tunnel of Love.flac");
 bgmusic.loop = true;
 let musicstart = false;
@@ -117,6 +117,8 @@ function clearline() {
             board.splice(y, 1);
             board.unshift(Array(COLS).fill(0));
             linecleared++;
+            updateScore(linecleared);
+            document.querySelector('#scoresection').innerHTML=`score: ${score_num}`;
             y++;
             sound_object.play();
         }
@@ -201,6 +203,10 @@ function draw() {
     ctx.clearRect(0, 0, COLS, ROWS);
     drawBoard();
     drawMatrix(player.matrix, player);
+}
+
+function updateScore(index){
+    score_num=score_num+score[index];
 }
 
 function playerDrop() {
