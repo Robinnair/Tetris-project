@@ -8,6 +8,7 @@ let lastTime = 0;
 let gameover = false;
 let score_num = 0;
 let gamestart = false;
+let currentAIMove = null;
 let bgmusic = new Audio("sounds/1.28 Toby Fox - DELTARUNE Chapter 2 OST - 28 Acid Tunnel of Love.flac");
 
 let max=JSON.parse(localStorage.getItem('high_score'))||0;
@@ -160,6 +161,7 @@ function start() {
     lastTime = 0;
     dropCounter = 0;
     startBtn.style.display = "none";
+    currentAIMove = findBestMove(board, player);
     update();
 }
 
@@ -183,6 +185,12 @@ function update(time = 0) {
     const deltatime = time - lastTime;
     dropCounter = dropCounter + deltatime;
     lastTime = time;
+
+    if (gamestart && !gameover && currentAIMove) 
+    {
+        applyBestMove(currentAIMove);
+    }
+    
     if (dropCounter > dropInterval) {
         playerDrop();
         dropCounter = 0;
@@ -251,6 +259,7 @@ function playerDrop() {
             document.querySelector('.scoresection').innerHTML = `score: ${score_num}`;
         }
         Object.assign(player, createPiece());
+        currentAIMove = findBestMove(board, player);
         if (collide(board, player)) {
             gameover = true;
         }
@@ -283,6 +292,144 @@ function merge(board, player) {
             }
         });
     });
+}
+
+
+//AI FUNCTIONS LOGIC:
+function cloneBoard(board) {
+    return board.map(row=>row.slice());
+}
+
+
+function clonePlayer(player)
+{
+    return {
+        x:player.x,
+        y:player.y,
+        color:player.color,
+        matrix:player.matrix.map(row=>(row.slice()))
+    };
+}
+
+function simulateDrop(board,player){
+    while(!collide(board,player)){
+        player.y++;
+    }
+    player.y--;
+    merge(board,player);
+    for(let y=board.length-1;y>=0;y--){
+        if(board[y].every(cell=>(cell!==0))){
+            board.splice(y,1);
+            board.unshift(Array(COLS).fill(0));
+            y++;
+        }
+    }
+}
+
+function evaluateBoard(board) {
+    const heights = Array(COLS).fill(0);
+    const { heights: h, holes } = height_and_holes(board, heights);
+
+    const aggregate_height = h.reduce((a, b) => a + b, 0);
+
+    let bumpiness = 0;
+    for (let i = 0; i < COLS - 1; i++) {
+        bumpiness += Math.abs(h[i] - h[i + 1]);
+    }
+
+    let linecleared = 0;
+    for (let y = 0; y < ROWS; y++) {
+        if (board[y].every(cell => cell !== 0)) {
+            linecleared++;
+        }
+    }
+
+    return (
+        -0.51 * aggregate_height
+        -0.36 * holes
+        -0.18 * bumpiness
+        +0.76 * linecleared
+    );
+}
+
+
+function height_and_holes(board,heights){
+    let holes=0;
+    for(let x=0;x<COLS;x++){
+        let blockfound=false;
+        for(let y=0;y<ROWS;y++){
+            if(board[y][x]!==0){
+                if(!blockfound){
+                    heights[x]=ROWS-y;
+                    blockfound=true;
+                }
+                else if(blockfound){
+                    holes++;
+                }
+            }
+        }
+    }
+    return {heights,holes};
+}
+
+function findBestMove(board, player) {
+    let bestScore = -Infinity;
+    let bestMove = null;
+
+    for (let r = 0; r < 4; r++) {
+        const testPlayer = clonePlayer(player);
+
+        for (let i = 0; i < r; i++) {
+            rotateMatrixRight(testPlayer.matrix);
+        }
+
+        for (let x = -5; x < COLS + 5; x++) {
+            const simPlayer = clonePlayer(testPlayer);
+            simPlayer.x = x;
+            simPlayer.y = 0;
+
+            if (collide(board, simPlayer)) continue;
+
+            const simBoard = cloneBoard(board);
+
+            simulateDrop(simBoard, simPlayer);
+            const score = evaluateBoard(simBoard);
+
+            if (score > bestScore) {
+                bestScore = score;
+                bestMove = { x, rotation: r };
+            }
+        }
+    }
+
+    return bestMove;
+}
+
+function applyBestMove(bestMove) {
+    if (!bestMove) return;
+
+    if (bestMove.rotation > 0) {
+        rotateRight();
+        bestMove.rotation--;
+        return;
+    }
+
+    if (player.x < bestMove.x) {
+        playerMove(1);
+    } else if (player.x > bestMove.x) {
+        playerMove(-1);
+    } else {
+        playerDrop();
+    }
+}
+
+function rotateMatrixRight(matrix){
+    for (let y = 0; y < matrix.length; y++) {
+        for (let x = 0; x < y; x++) {
+            [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
+        }
+    }
+    matrix.forEach(row => row.reverse());
 }
 
 update();
