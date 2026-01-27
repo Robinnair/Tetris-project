@@ -16,6 +16,7 @@ document.querySelector('.highest_scoresection').innerHTML=`High score: ${max}`;
 bgmusic.loop = true;
 let musicstart = false;
 let gameovermusic = false;
+let isAI = false;
 const SHAPES = {
     I: [
         [0, 0, 0, 0],
@@ -149,9 +150,19 @@ function playerMove(dir) {
 }
 
 const startBtn = document.querySelector(".start-button");
+const manualBtn = document.querySelector(".manual-button");
+const aiBtn = document.querySelector(".ai-button");
 
-
-startBtn.addEventListener("click", start);
+manualBtn.addEventListener("click", () => {
+    isAI = false;
+    startBtn.style.display = "none";
+    start();
+});
+aiBtn.addEventListener("click", () => {
+    isAI = true;
+    startBtn.style.display = "none";
+    start();
+});
 
 function start() {
     if (gamestart) return;
@@ -161,7 +172,7 @@ function start() {
     lastTime = 0;
     dropCounter = 0;
     startBtn.style.display = "none";
-    currentAIMove = findBestMove(board, player);
+    currentAIMove = isAI ? findBestMove(board, player) : null;
     update();
 }
 
@@ -259,7 +270,7 @@ function playerDrop() {
             document.querySelector('.scoresection').innerHTML = `score: ${score_num}`;
         }
         Object.assign(player, createPiece());
-        currentAIMove = findBestMove(board, player);
+        currentAIMove = isAI ? findBestMove(board, player) : null;
         if (collide(board, player)) {
             gameover = true;
         }
@@ -279,7 +290,7 @@ function collide(board, player) {
                     return true;
                 }
             }
-        }
+        };
     }
     return false;
 }
@@ -431,5 +442,6 @@ function rotateMatrixRight(matrix){
     }
     matrix.forEach(row => row.reverse());
 }
+
 
 update();

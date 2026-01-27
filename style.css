@@ -68,21 +68,73 @@ canvas{
 }
 
 .start-button{
-    background-color: purple;
-    color:white;
-    font-size: 50px;
-    font-family:Tourney;
-    border:none;
+    background: linear-gradient(135deg,#7b1fa2 0%, #ab47bc 50%, #e040fb 100%);
+    color: #fff;
+    font-size: 42px;
+    font-family: Tourney, sans-serif;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+    padding: 14px 28px;
+    margin-top: 12px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(124,58,237,0.28), inset 0 -3px 6px rgba(255,255,255,0.06);
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .start-button:hover{
-    color:purple;
-    border:solid;
-    background-color: black;
+    transform: translateY(-4px);
+    box-shadow: 0 18px 36px rgba(124,58,237,0.32);
+    background: linear-gradient(135deg,#8e24aa 0%, #ce6be7 100%);
+    color: #fff;
 }
 
+.start-button:active{
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+}
+
+.start-button:focus{
+    outline: none;
+    box-shadow: 0 0 0 6px rgba(142,36,170,0.14);
+}
+
+/* container */
 .start-button-box{
     display: flex;
     justify-content: center;
-    margin-top:50px;
+    margin-top: 50px;
+    width: 100%;
+}
+
+/* small mode buttons */
+.mode-button{
+    padding: 10px 16px;
+    cursor: pointer;
+    border: 0;
+    background: #4CAF50;
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+    transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+}
+
+.mode-button:hover{
+    transform: translateY(-3px);
+    filter: brightness(1.05);
+}
+
+.mode-button:active{
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.mode-button.ai-button{
+    background: linear-gradient(135deg,#2196F3 0%, #42A5F5 100%);
 }
